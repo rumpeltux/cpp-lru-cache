@@ -25,10 +25,12 @@ public:
 		_max_size(max_size) {
 	}
 	
-	void put(const key_t& key, const value_t& value) {
+	// Returns true if the key already existed. False otherwise.
+	bool put(const key_t& key, const value_t& value) {
 		auto it = _cache_items_map.find(key);
 		_cache_items_list.push_front(key_value_pair_t(key, value));
-		if (it != _cache_items_map.end()) {
+		bool existed = it != _cache_items_map.end();
+		if (existed) {
 			_cache_items_list.erase(it->second);
 			_cache_items_map.erase(it);
 		}
@@ -40,6 +42,7 @@ public:
 			_cache_items_map.erase(last->first);
 			_cache_items_list.pop_back();
 		}
+		return existed;
 	}
 	
 	const value_t& get(const key_t& key) {
@@ -60,7 +63,7 @@ public:
 		return _cache_items_map.size();
 	}
 	
-private:
+protected:
 	std::list<key_value_pair_t> _cache_items_list;
 	std::unordered_map<key_t, list_iterator_t> _cache_items_map;
 	size_t _max_size;
