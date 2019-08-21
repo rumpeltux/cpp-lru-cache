@@ -62,7 +62,11 @@ public:
 	size_t size() const {
 		return _cache_items_map.size();
 	}
-	
+
+	const std::list<key_value_pair_t>& items() const {
+	  return _cache_items_list;
+	}
+
 protected:
 	std::list<key_value_pair_t> _cache_items_list;
 	std::unordered_map<key_t, list_iterator_t> _cache_items_map;
